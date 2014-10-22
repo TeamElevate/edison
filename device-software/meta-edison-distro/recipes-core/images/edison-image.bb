@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 LICENSE = "MIT"
 IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP} ${CORE_IMAGE_EXTRA_INSTALL}"
 IMAGE_INSTALL += "openssh-sftp-server"
+IMAGE_INSTALL += "bluez5"
+IMAGE_INSTALL += "libusb1"
 
 IMAGE_LINGUAS = " "
 
