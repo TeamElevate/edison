@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flashfile version="1">
+  <id>system</id>
+  <platform>saltbay</platform>
+  <gpflag>
+    <value>0x80000007</value>
+  </gpflag>
+  <code_group name="FIRMWARE">
+    <file TYPE="IFWI">
+      <name>ifwi_saltbay_pr2.bin</name>
+      <version>0003.008d</version>
+    </file>
+    <file TYPE="FW_DNX">
+      <name>dnx_fwr_saltbay_pr2.bin</name>
+      <version>0003.008d</version>
+    </file>
+    <file TYPE="OS_DNX">
+      <name>dnx_osr_saltbay_pr2.bin</name>
+      <version>0003.008d</version>
+    </file>
+  </code_group>
+  <code_group name="BOOTLOADER">
+    <file TYPE="KBOOT">
+      <name>u-boot-edison.img</name>
+      <version>main-weekly-1115</version>
+    </file>
+  </code_group>
+</flashfile>
