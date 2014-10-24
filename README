@@ -1,0 +1,19 @@
+Team Elevate's Yocto Build
+==========================
+This is Intel's Yocto build for the Intel Edison. We are using the Edison for a quadcopter project at the University of
+Michigan (EECS 473).
+
+Currently based off Version 68.
+
+All of our changes (except for a .gitignore and this README) will be in the elevate branch
+
+Setup Instructions
+==================
+1. We use bluetooth which is currently blocked on boot to fix this run
+$edison> rfkill unblock bluetooth
+
+2. libmraa (used to talk over I2C, SPI, GPIO...) is an old version which was giving us issues with our I2C interface. To
+fix this use opkg to update mraa.
+$edison> echo "src maa-upm http://iotdk.intel.com/repos/1.1/intelgalactic" > /etc/opkg/intel-iotdk.conf
+$edison> opkg update
+$edison> opkg upgrade
