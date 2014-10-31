@@ -5078,7 +5078,7 @@ dhd_register_if(dhd_pub_t *dhdp, int ifidx, bool need_rtnl_lock)
 	dhd_info_t *dhd = (dhd_info_t *)dhdp->info;
 	struct net_device *net = NULL;
 	int err = 0;
-	uint8 temp_addr[ETHER_ADDR_LEN] = { 0x00, 0x90, 0x4c, 0x11, 0x22, 0x33 };
+	uint8 temp_addr[ETHER_ADDR_LEN] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 	DHD_TRACE(("%s: ifidx %d\n", __FUNCTION__, ifidx));
 

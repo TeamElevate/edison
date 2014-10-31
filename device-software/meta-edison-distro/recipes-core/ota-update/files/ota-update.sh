@@ -1,10 +1,12 @@
-#!/bin/sh
-# first install script to do post flash install
+#!/bin/bash
+# FIXME: function definition shall be moved to a common script
 
 # global variable set to 1 if output is systemd journal
 fi_journal_out=0
 
-# handle argument, if first-install is called from systemd service
+export PATH="$PATH:/usr/sbin/"
+
+# handle argument, if ota-update is called from systemd service
 # arg1 is "systemd-service"
 if [ "$1" == "systemd-service" ]; then fi_journal_out=1; fi;
 
@@ -25,22 +27,22 @@ fi_echo () {
 # set_retry_count to failure file
 # arg $1 new retry count
 set_retry_count () {
-    fw_setenv first_install_retry $1
+    fw_setenv ota_update_retry $1
 }
 
 # get_retry_count from failure from bootloader
 get_retry_count () {
-    retry_count=$(fw_printenv first_install_retry | tr -d "first_install_retry=")
+    retry_count=$(fw_printenv ota_update_retry | tr -d "ota_update_retry=")
     [ -z $retry_count ] && { set_retry_count 0; retry_count=0;}
     return $retry_count
 }
 
-# exit first_install by rebooting and handling the failure by setting
+# exit ota_update by rebooting and handling the failure by setting
 # the firmware target according to failure or success
 # on failure increment fail count and reboot
 # on success reboot in multi-user target
 # arg $1 exit code
-exit_first_install () {
+exit_ota_update () {
     if [ $1 -eq 0 ]; then
         # reset failure count
         set_retry_count 0
@@ -51,7 +53,7 @@ exit_first_install () {
 
     fi_echo "Rebooting...."
     # dump journal to log file
-    journalctl -u first-install -o short-iso >> /first-install.log
+    journalctl -u ota-update -o short-iso >> /ota-update.log
     reboot
 }
 
@@ -61,7 +63,7 @@ exit_first_install () {
 fi_assert () {
     if [ $1 -ne 0 ]; then
         fi_echo "${2} : Failed ret($1)" err;
-        exit_first_install $1;
+        exit_ota_update $1;
     else
         fi_echo "${2} : Success";
     fi
@@ -121,43 +123,7 @@ setup_ap_ssid_and_passphrase () {
 get_retry_count
 retry_count=$?
 set_retry_count $((${retry_count} + 1))
-fi_echo "Starting First Install (try: ${retry_count})"
-
-# format partition home to ext4
-mkfs.ext4 -m0 /dev/disk/by-partlabel/home
-fi_assert $? "Formatting home partition"
-
-# backup initial /home/root directory
-cp -R /home/root /tmp
-fi_assert $? "Backup home/root contents of rootfs"
-
-# mount home partition on /home
-mount /dev/disk/by-partlabel/home /home
-fi_assert $? "Mount /home partition"
-
-# copy back contents to /home
-mv /tmp/root /home
-fi_assert $? "Restore home/root contents on new /home partition"
-
-# create a fat32 primary partition on all available space
-echo -ne "n\np\n1\n\n\nt\nb\np\nw\n" | fdisk /dev/disk/by-partlabel/update
-
-# silent error code for now because fdisk failed to reread MBR correctly
-# MBR is correct but fdisk understand it as the main system MBR, which is
-# not the case.
-fi_assert 0 "Formatting update partition Step 1"
-
-# create a loop device on update disk
-losetup -o 8192 /dev/loop0 /dev/disk/by-partlabel/update
-fi_assert $? "Formatting update partition Step 2"
-
-# format update partition
-mkfs.vfat /dev/loop0 -n "Edison" -F 32
-fi_assert $? "Formatting update partition Step 3"
-
-# remove loop device on update disk
-losetup -d /dev/loop0
-fi_assert $? "Formatting update partition Step 4 final"
+fi_echo "Starting OTA update (try: ${retry_count})"
 
 # handle factory partition
 factory_partition
@@ -174,8 +140,8 @@ fi_assert $? "Update file system table /etc/fstab"
 setup_ap_ssid_and_passphrase
 fi_assert $? "Generating Wifi Access Point SSID and passphrase"
 
-fi_echo "First install success"
+fi_echo "OTA update success"
 
 # end main part
-exit_first_install 0
+exit_ota_update 0
 

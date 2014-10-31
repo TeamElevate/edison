@@ -19,7 +19,6 @@ cp $top_repo_dir/build/tmp/deploy/images/edison/u-boot-edison.bin $top_repo_dir/
 cp -R $top_repo_dir/build/tmp/deploy/images/edison/u-boot-envs $top_repo_dir/build/toFlash
 
 # Copy IFWI
-cp $top_repo_dir/device-software/utils/flash/ifwi/mcg_sku/*.bin $top_repo_dir/build/toFlash/
 cp $top_repo_dir/device-software/utils/flash/ifwi/edison/*.bin $top_repo_dir/build/toFlash/
 
 # build Ifwi file for using in DFU mode
@@ -40,7 +39,6 @@ cp $top_repo_dir/build/tmp/deploy/images/edison/u-boot-edison.bin $top_repo_dir/
 
 
 # copy phoneflashtool xml file
-cp $top_repo_dir/device-software/utils/flash/pft-config-mcg_sku.xml $top_repo_dir/build/toFlash/
 cp $top_repo_dir/device-software/utils/flash/pft-config-edison.xml $top_repo_dir/build/toFlash/
 
 # Copy flashing script
@@ -59,9 +57,17 @@ tab_size=$(for fil in $(find $pth_out -maxdepth 1 -type f -printf "%f\n") ; do s
 # iterate the array and do tag -> value substitution in ota_update.cmd
 for elem in $tab_size ; do IFS=':' read -a fld_elem <<< "$elem"; sed -i "s/${fld_elem[0]}/${fld_elem[1]}/g" $top_repo_dir/build/toFlash/ota_update.cmd; done;
 
+# Look for mkimage tool path
+uboot_default_path=$top_repo_dir/u-boot/tools/
+uboot_ext_src_path=$top_repo_dir/build/tmp/work/edison-poky-linux/u-boot
+if [ -d $uboot_default_path ]; then
+    mkimage_tool_path=$(find $uboot_default_path -name mkimage)
+else
+    mkimage_tool_path=$(find $uboot_ext_src_path -name mkimage)
+fi
 
 # Convert OTA script to u-boot script
-$top_repo_dir/u-boot/tools/mkimage -a 0x10000 -T script -C none -n 'Edison Updater script' -d $top_repo_dir/build/toFlash/ota_update.cmd $top_repo_dir/build/toFlash/ota_update.scr
+$mkimage_tool_path -a 0x10000 -T script -C none -n 'Edison Updater script' -d $top_repo_dir/build/toFlash/ota_update.cmd $top_repo_dir/build/toFlash/ota_update.scr
 
 # Supress Preprocessed OTA script
 rm $top_repo_dir/build/toFlash/ota_update.cmd

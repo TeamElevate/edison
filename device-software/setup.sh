@@ -41,6 +41,7 @@ LICENSE_FLAGS_WHITELIST += "commercial"
 COPY_LIC_MANIFEST = "1"
 COPY_LIC_DIRS = "1"
 FILESYSTEM_PERMS_TABLES = "$my_dir/device-software/meta-edison-distro/files/fs-perms.txt"
+$extra_archiving
 $extra_conf
 EOF
 }
@@ -72,6 +73,7 @@ BBLAYERS ?= " \\
   $my_dir/device-software/meta-edison-distro \\
   $my_dir/device-software/meta-edison-middleware \\
   $my_dir/device-software/meta-edison-arduino \\
+  $my_dir/device-software/meta-edison-devtools \\
   $extra_layers
   "
 BBLAYERS_NON_REMOVABLE ?= " \\
@@ -109,6 +111,7 @@ function usage()
   echo -e "\t--build_name=$my_build_name\t\tdefines custom build name which can then be retrieved on a running linux in /etc/version"
   echo -e "\t--sdk_host=$my_sdk_host\t\tchoose host machine on which the generated SDK and cross compiler will be run. Must be one of [$all_sdk_hosts]"
   echo -e "\t-l --list_sdk_hosts\t\tlist availables sdk host supported machines"
+  echo -e "\t--create_src_archive\t\twhen set, copies sources of all deployed packages into build/tmp/deploy/sources"
   echo ""
 }
 
@@ -143,6 +146,12 @@ main() {
       -h | --help)
         usage
         exit
+        ;;
+      --create_src_archive)
+        extra_archiving="INHERIT += \"archiver\"
+ARCHIVER_MODE[src] = \"original\"
+COPYLEFT_LICENSE_INCLUDE = 'GPL* LGPL*'
+"
         ;;
       --dl_dir)
         check_path
@@ -230,9 +239,13 @@ main() {
   # Apply patch on top of it allowing to perform build in external source directory
   #echo "Applying patch on it"
   cd $poky_dir
+  git apply --whitespace=nowarn $my_dir/device-software/utils/fix-gcc49-binutils.patch 
   git apply $my_dir/device-software/utils/0001-kernel-kernel-yocto-fix-external-src-builds-when-S-B-poky-dora.patch
   git apply $my_dir/device-software/utils/gcc-Clean-up-configure_prepend-and-fix-for-mingw.patch
   git apply $my_dir/device-software/utils/sdk-populate-clean-broken-links.patch
+  git apply $my_dir/device-software/utils/fix-sshd-varloglastlog-warning.patch
+  git apply --whitespace=nowarn $my_dir/device-software/utils/0001-bash-fix-CVE-2014-6271.patch
+  git apply --whitespace=nowarn $my_dir/device-software/utils/0002-bash-Fix-CVE-2014-7169.patch
 
   mingw_dir=$poky_dir/meta-mingw
   echo "Unpacking Mingw layer to poky/meta-mingw/ directory from archive"

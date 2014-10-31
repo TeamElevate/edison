@@ -1,9 +1,9 @@
-From e888d015120e6d7a057dcb6b39ca243fa4f7cd70 Mon Sep 17 00:00:00 2001
-From: Fabien Chereau <fabien.chereau@intel.com>
-Date: Thu, 4 Sep 2014 11:11:05 +0200
+From fa8789acf19e0653fb8c1f63cf0f117f85e1882d Mon Sep 17 00:00:00 2001
+From: Jenkins <dswci@intel.com>
+Date: Tue, 14 Oct 2014 14:57:01 +0200
 Subject: [PATCH] Squashed all commits from upstream to Edison
 
-Change-Id: I92371895c2c15236821a8008ef688bd27f237b32
+Change-Id: I92ad27d6a884ce741a255e2df02bdf99018512c8
 ---
  Makefile                                       |    1 +
  arch/x86/config.mk                             |    4 +-
@@ -36,7 +36,6 @@ Change-Id: I92371895c2c15236821a8008ef688bd27f237b32
  board/intel/edison/Makefile                    |    1 +
  board/intel/edison/config.mk                   |    7 +
  board/intel/edison/edison.c                    |   54 +
- board/intel/edison/edison.h                    |    0
  board/intel/edison/edison_start.S              |   13 +
  boards.cfg                                     |    1 +
  common/Makefile                                |    2 +
@@ -86,7 +85,7 @@ Change-Id: I92371895c2c15236821a8008ef688bd27f237b32
  include/linux/usb/gadget.h                     |   15 +-
  include/usb/fastboot.h                         |  100 ++
  pft-config.xml                                 |   28 +
- 81 files changed, 9997 insertions(+), 42 deletions(-)
+ 80 files changed, 9997 insertions(+), 42 deletions(-)
  create mode 100644 arch/x86/cpu/tangier/Makefile
  create mode 100644 arch/x86/cpu/tangier/board_id.c
  create mode 100644 arch/x86/cpu/tangier/car.S
@@ -11154,5 +11153,5 @@ index 0000000..885875f
 +        </code_group>
 +</flashfile>
 -- 
-1.8.3.2
+1.7.9.5
 

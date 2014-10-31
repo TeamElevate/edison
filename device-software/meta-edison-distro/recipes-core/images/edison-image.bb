@@ -60,7 +60,6 @@ IMAGE_INSTALL += "file"
 IMAGE_INSTALL += "otg"
 IMAGE_INSTALL += "pciutils"
 IMAGE_INSTALL += "usbutils"
-IMAGE_INSTALL += "tcpdump"
 IMAGE_INSTALL += "ldd"
 IMAGE_INSTALL += "i2c-tools"
 IMAGE_INSTALL += "watchdog-sample"
@@ -69,6 +68,7 @@ IMAGE_INSTALL += "libwebsockets"
 IMAGE_INSTALL += "first-install"
 IMAGE_INSTALL += "systemd-analyze"
 IMAGE_INSTALL += "wget"
+IMAGE_INSTALL += "ota-update"
 
 # Allows to enable OpenMP feature
 IMAGE_INSTALL += "libgomp"
@@ -92,11 +92,10 @@ IMAGE_FEATURES += "tools-debug"
 IMAGE_INSTALL += "crashlog"
 
 # Adds various other tools
-IMAGE_INSTALL += "powertop"
-IMAGE_INSTALL += "iperf"
+IMAGE_INSTALL += "tcpdump"
 IMAGE_INSTALL += "net-tools"
 IMAGE_INSTALL += "lsof"
-
+IMAGE_INSTALL += "iperf"
 
 # Those are necessary to manually create partitions and file systems on the eMMC
 IMAGE_INSTALL += "parted"

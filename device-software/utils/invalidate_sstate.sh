@@ -21,3 +21,5 @@ bitbake -c cleansstate iotkit-comm-c
 bitbake -c cleansstate iotkit-comm-js
 bitbake -c cleansstate iotkit-agent
 bitbake -c cleansstate oobe
+bitbake -c cleansstate mraa
+bitbake -c cleansstate upm

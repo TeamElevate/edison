@@ -332,7 +332,7 @@ else
     echo "Ota Success going to reboot";
     setenv ota_done 1 ;
     env delete -f ota_checked;
-    setenv bootargs_target first-install
+    setenv bootargs_target ota-update
     saveenv
     exit;
 fi;
