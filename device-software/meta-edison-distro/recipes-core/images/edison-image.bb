@@ -84,8 +84,6 @@ IMAGE_INSTALL += "python-distutils python-pkgutil python-audio python-image pyth
 IMAGE_INSTALL += "bcm43340-fw"
 # Bluetooth Firmware patch for 43340 and its patch utility
 IMAGE_INSTALL += "bcm43340-bt"
-# service daemon that listens to rfkill events and trigger FW patch download
-IMAGE_INSTALL += "bluetooth-rfkill-event"
 # Wifi driver built as a kernel module
 IMAGE_INSTALL += "bcm43340-mod"
 
