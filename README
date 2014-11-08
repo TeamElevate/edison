@@ -7,8 +7,14 @@ Currently based off Version 68.
 
 All of our changes (except for a .gitignore and this README) will be in the elevate branch
 
-Setup Instructions
-==================
+Building Instructions
+=====================
+$edison> ./device-software/setup.sh
+$edison> source poky/oe-init-build-env
+$edison> bitbake edison-image 
+
+Edison Setup Instructions
+=========================
 1. We use bluetooth which is currently blocked on boot to fix this run
 $edison> rfkill unblock bluetooth
 
