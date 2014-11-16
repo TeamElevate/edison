@@ -15,11 +15,38 @@ $edison> bitbake edison-image
 
 Edison Setup Instructions
 =========================
-1. We use bluetooth which is currently blocked on boot to fix this run
-$edison> rfkill unblock bluetooth
+1. We shoudl fix the journald problem
+$edison> vi /etc/systemd/journald.conf
+Edit the config such that 
+SystemMaxUse=10
+SystemKeepFree=15
+SystemMaxFileSize=1M
 
-2. libmraa (used to talk over I2C, SPI, GPIO...) is an old version which was giving us issues with our I2C interface. To
+2. Fix issue where machine-id changes every reboot
+$edison> umount /etc/machine-id
+$edison> systemd-machine-id-setup
+$edison> rm -rf /var/log/journal/*
+
+3. We need to copy over our binaries to the Edison
+$local>  scp network/btle_adv root@{EDISON-IP}:/usr/sbin
+$local>  scp ds4linux/ds4_daemon root@{EDISON-IP}:/usr/sbin
+
+4. We need to setup our daemons running
+First start the bluetooth advertiser
+$local>  cp network/btle-adv.service root@{EDISON-IP}:/lib/systemd/system/
+$edison> systemctl daemon-reload
+$edison> systemctl enable btle-adv
+
+And ds4 controller daemon
+$local>  cp ds4linux/ds4_daemon.service root@{EDISON-IP}:/lib/systemd/system/
+$edison> systemctl daemon-reload
+$edison> systemctl enable ds4_daemon
+
+5. libmraa (used to talk over I2C, SPI, GPIO...) is an old version which was giving us issues with our I2C interface. To
 fix this use opkg to update mraa.
 $edison> echo "src maa-upm http://iotdk.intel.com/repos/1.1/intelgalactic" > /etc/opkg/intel-iotdk.conf
 $edison> opkg update
 $edison> opkg upgrade
+
+6. And finally reboot everything
+$edison> reboot
