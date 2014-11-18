@@ -30,6 +30,7 @@ $edison> rm -rf /var/log/journal/*
 3. We need to copy over our binaries to the Edison
 $local>  scp network/btle_adv root@{EDISON-IP}:/usr/sbin
 $local>  scp ds4linux/ds4_daemon root@{EDISON-IP}:/usr/sbin
+$local>  scp ds4linux/i2c_daemon root@{EDISON-IP}:/usr/sbin
 
 4. We need to setup our daemons running
 First start the bluetooth advertiser
@@ -41,6 +42,11 @@ And ds4 controller daemon
 $local>  cp ds4linux/ds4_daemon.service root@{EDISON-IP}:/lib/systemd/system/
 $edison> systemctl daemon-reload
 $edison> systemctl enable ds4_daemon
+
+And i2c daemon
+$local>  cp ds4linux/i2c-ds4.service root@{EDISON-IP}:/lib/systemd/system/
+$edison> systemctl daemon-reload
+$edison> systemctl enable i2c-ds4
 
 5. libmraa (used to talk over I2C, SPI, GPIO...) is an old version which was giving us issues with our I2C interface. To
 fix this use opkg to update mraa.
